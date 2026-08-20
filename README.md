@@ -8,7 +8,8 @@ Project Zomboid dedicated server on Debian/Ubuntu:
 - JVM settings and a systemd unit
 - daily world backup and hourly `players.db` backup via systemd timers
 - graceful stops: players are warned over RCON and the world is saved before
-  any update or config-triggered restart
+  any update or config-triggered restart (bundled stdlib-only `pzrcon.py`, also
+  handy for ad-hoc commands: `~steam/pzrcon.py 127.0.0.1 27015 <password> players`)
 
 ## Install
 

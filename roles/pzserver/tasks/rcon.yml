@@ -11,20 +11,21 @@
       become_user: "{{ pzserver_user }}"
       ansible.builtin.command:
         argv:
-          - "{{ pzserver_rcon_venv }}/bin/python"
-          - -c
-          - |
-            import sys
-            from rcon.source import Client
-            with Client("127.0.0.1", int(sys.argv[1]), passwd=sys.argv[2], timeout=5) as c:
-                c.run("servermsg", sys.argv[3])
-                c.run("save")
+          - "{{ pzserver_home }}/pzrcon.py"
+          - 127.0.0.1
           - "{{ pzserver_cfg.rcon.port }}"
           - "{{ pzserver_cfg.rcon.password }}"
-          - "Server restarting in {{ pzserver_restart_warning }} seconds for maintenance"
+          - servermsg "Server restarting in {{ pzserver_restart_warning }} seconds for maintenance"
+          - save
+      register: pzserver_rcon
       changed_when: false
-      ignore_errors: true
+      failed_when: false
       no_log: true
+
+    - name: Report RCON failure
+      ansible.builtin.debug:
+        msg: "RCON warning failed (rc={{ pzserver_rcon.rc }}): {{ pzserver_rcon.stderr | regex_replace(pzserver_cfg.rcon.password, '***') }}"
+      when: pzserver_rcon.rc != 0
 
     - name: Wait for players
       ansible.builtin.pause:

@@ -14,7 +14,6 @@ pzserver_jvm_max_heap: "8g"
 pzserver_skip_update: false
 # Seconds to warn players over RCON before a stop/restart; 0 disables
 pzserver_restart_warning: 60
-pzserver_rcon_venv: "{{ pzserver_home }}/.rcon-venv"
 
 pzserver_backup_enabled: true
 pzserver_backup_dir: "{{ pzserver_home }}/backups"
