@@ -67,6 +67,7 @@ ansible-playbook site.yml -e pzserver_skip_update=true
 | `pzserver_jvm_max_heap` | `8g` | `-Xmx` |
 | `pzserver_skip_update` | `false` | Skip steamcmd update and the pre-update stop |
 | `pzserver_restart_warning` | `60` | Seconds of RCON warning before stop/restart; `0` disables |
+| `pzserver_rcon_timeout` | `30` | Socket timeout in seconds for RCON calls |
 | `pzserver_backup_enabled` | `true` | Install backup scripts and timers |
 | `pzserver_backup_keep_days` / `pzserver_backup_db_keep_hours` | `7` / `48` | Retention |
 | `pzserver_backup_on_calendar` / `pzserver_backup_db_on_calendar` | `daily` / `hourly` | systemd `OnCalendar` |

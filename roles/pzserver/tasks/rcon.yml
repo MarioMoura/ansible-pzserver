@@ -12,6 +12,8 @@
       ansible.builtin.command:
         argv:
           - "{{ pzserver_home }}/pzrcon.py"
+          - --timeout
+          - "{{ pzserver_rcon_timeout }}"
           - 127.0.0.1
           - "{{ pzserver_cfg.rcon.port }}"
           - "{{ pzserver_cfg.rcon.password }}"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal Source RCON client: pzrcon.py HOST PORT PASSWORD COMMAND [COMMAND...]"""
+"""Minimal Source RCON client: pzrcon.py [--timeout SECONDS] HOST PORT PASSWORD COMMAND [COMMAND...]"""
 import socket
 import struct
 import sys
@@ -30,8 +30,13 @@ def read(sock):
 
 
 def main():
-    host, port, password, *commands = sys.argv[1:]
-    with socket.create_connection((host, int(port)), timeout=10) as sock:
+    args = sys.argv[1:]
+    timeout = 30.0
+    if args[:1] == ["--timeout"]:
+        timeout = float(args[1])
+        args = args[2:]
+    host, port, password, *commands = args
+    with socket.create_connection((host, int(port)), timeout=timeout) as sock:
         send(sock, 1, AUTH, password)
         while True:
             pid, ptype, _ = read(sock)
