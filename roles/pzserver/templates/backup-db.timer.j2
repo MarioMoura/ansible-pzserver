@@ -1,0 +1,9 @@
+[Unit]
+Description=Scheduled backup of Project Zomboid player database
+
+[Timer]
+OnCalendar={{ pzserver_backup_db_on_calendar }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

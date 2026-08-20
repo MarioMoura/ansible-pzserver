@@ -1,0 +1,428 @@
+# Players can hurt and kill other players
+PVP={{ pzserver_cfg.pvp.enabled | lower }}
+
+# PVP is logged to admin chat
+PVPLogToolChat={{ pzserver_cfg.pvp.log_to_chat | lower }}
+
+# PVP is logged to file
+PVPLogToolFile={{ pzserver_cfg.pvp.log_to_file | lower }}
+
+# Game time stops when there are no players online
+PauseEmpty={{ pzserver_cfg.game.pause_empty | lower }}
+
+# Toggles global chat on or off.
+GlobalChat={{ pzserver_cfg.game.global_chat | lower }}
+
+ChatStreams={{ pzserver_cfg.game.chat_streams }}
+
+# Clients may join without already having an account in the whitelist. If set to false, administrators must manually create username/password combos.
+Open={{ pzserver_cfg.server.open | lower }}
+
+# The first welcome message visible in the chat panel. This will be displayed immediately after player login. you can use RGB colours to chance the colour of the welcome message. You can also use < LINE>, without the space, to create a separate lines within your text. Use: \<RGB:1,0,0> This message will show up red!
+ServerWelcomeMessage={{ pzserver_cfg.welcome_message }}
+
+# Display usernames above player's heads in-game.
+DisplayUserName={{ pzserver_cfg.player.display_username | lower }}
+
+# Display first & last name above player's heads.
+ShowFirstAndLastName={{ pzserver_cfg.player.show_first_and_last_name | lower }}
+
+UsernameDisguises={{ pzserver_cfg.player.username_disguises | lower }}
+
+HideDisguisedUserName={{ pzserver_cfg.player.hide_disguised_username | lower }}
+
+SwitchZombiesOwnershipEachUpdate={{ pzserver_cfg.misc.switch_zombies_ownership_each_update | lower }}
+
+# Force every new player to spawn at these set x,y,z world coordinates. Find desired coordinates at map.projectzomboid.com. (Ignored when 0,0,0)
+SpawnPoint={{ pzserver_cfg.player.spawn_point }}
+
+# Players can enter and leave PVP on an individual basis. A player can only hurt another player when at least one of them is in PVP mode - as shown by the unobscured skull and crossbones on the left of the screen. When SafetySystem=false, players are free to hurt each other at any time if PVP is enabled.
+SafetySystem={{ pzserver_cfg.pvp.safety_system | lower }}
+
+# Display a skull icon over the head of players who have entered PVP mode
+ShowSafety={{ pzserver_cfg.pvp.show_safety | lower }}
+
+# The time it takes for a player to enter and leave PVP mode Min: 0 Max: 1000 Default: 2
+SafetyToggleTimer={{ pzserver_cfg.pvp.safety_toggle_timer }}
+
+# The delay before a player can enter or leave PVP mode again, having recently done so Min: 0 Max: 1000 Default: 3
+SafetyCooldownTimer={{ pzserver_cfg.pvp.safety_cooldown_timer }}
+
+# Min: 0 Max: 60 Default: 60
+SafetyDisconnectDelay={{ pzserver_cfg.pvp.safety_disconnect_delay }}
+
+# Item types new players spawn with. Separate multiple item types with commas. Example: Base.Axe,Base.Bag_BigHikingBag
+SpawnItems={{ pzserver_cfg.player.spawn_items }}
+
+# Default starting port for player data. If UDP, this is this one of two ports used. Min: 0 Max: 65535 Default: 16261
+DefaultPort={{ pzserver_cfg.network.default_port }}
+
+# Min: 0 Max: 65535 Default: 16262
+UDPPort={{ pzserver_cfg.network.udp_port }}
+
+# Reset ID determines if the server has undergone a soft-reset. If this number does match the client, the client must create a new character. Used in conjunction with PlayerServerID. It is strongly advised that you backup these IDs somewhere Min: 0 Max: 2147483647 Default: 517305769
+ResetID={{ pzserver_cfg.ids.reset_id }}
+
+# Enter the mod loading ID here. It can be found in \Steam\steamapps\workshop\modID\mods\modName\info.txt
+{% set mod_ids = [] %}
+{% for mod in pzserver_cfg.mods if mod.mid is defined and mod.mid %}
+{%   if mod.mid is iterable and mod.mid is not string %}
+{%     for m in mod.mid if m %}{% if mod_ids.append(m) %}{% endif %}{% endfor %}
+{%   else %}
+{%     if mod_ids.append(mod.mid) %}{% endif %}
+{%   endif %}
+{% endfor %}
+Mods={% if mod_ids %}\{{ mod_ids | join(';\\') }}{% endif %}
+
+# Enter the foldername of the mod found in \Steam\steamapps\workshop\modID\mods\modName\media\maps\
+Map={{ pzserver_cfg.map }}
+
+# Kick clients whose game files don't match the server's.
+DoLuaChecksum={{ pzserver_cfg.misc.do_lua_checksum | lower }}
+
+DenyLoginOnOverloadedServer={{ pzserver_cfg.misc.deny_login_on_overloaded_server | lower }}
+
+# Shows the server on the in-game browser. (Note: Steam-enabled servers are always visible in the Steam server browser)
+Public={{ pzserver_cfg.server.public | lower }}
+
+# Name of the server displayed in the in-game browser and, if applicable, the Steam browser
+PublicName={{ pzserver_cfg.server.public_name }}
+
+# Description displayed in the in-game public server browser. Typing   will create a new line in your description
+PublicDescription={{ pzserver_cfg.server.public_description }}
+
+# Maximum number of players that can be on the server at one time. This excludes admins.
+# WARNING: Server player counts above 32 will potentially result in poor map streaming and desync. Please advance with caution. Min: 1 Max: 100 Default: 32
+MaxPlayers={{ pzserver_cfg.server.max_players }}
+
+# Ping limit, in milliseconds, before a player is kicked from the server. (Set to 0 to disable) Min: 0 Max: 2147483647 Default: 0
+PingLimit={{ pzserver_cfg.network.ping_limit }}
+
+# Items will not respawn in buildings that players have claimed as a safehouse
+SafehousePreventsLootRespawn={{ pzserver_cfg.safehouse.prevents_loot_respawn | lower }}
+
+# Remove player accounts from the whitelist after death. This prevents players creating a new character after death on Open=false servers
+DropOffWhiteListAfterDeath={{ pzserver_cfg.game.drop_off_whitelist_after_death | lower }}
+
+# All forms of fire are disabled - except for campfires
+NoFire={{ pzserver_cfg.game.no_fire | lower }}
+
+# If checked, every time a player dies a global message will be displayed in the chat
+AnnounceDeath={{ pzserver_cfg.game.announce_death | lower }}
+
+# If checked, every time an animal dies a global message will be displayed in the chat
+AnnounceAnimalDeath={{ pzserver_cfg.game.announce_animal_death | lower }}
+
+# Loaded parts of the map are saved after this set number of real-world minutes have passed. (The map is usually saved only after clients leave a loaded area) Min: 0 Max: 2147483647 Default: 0
+SaveWorldEveryMinutes={{ pzserver_cfg.game.save_world_every_minutes }}
+
+# Both admins and players can claim safehouses
+PlayerSafehouse={{ pzserver_cfg.safehouse.player_safehouse | lower }}
+
+# Only admins can claim safehouses
+AdminSafehouse={{ pzserver_cfg.safehouse.admin_safehouse | lower }}
+
+# Allow non-members to enter a safehouse without being invited
+SafehouseAllowTrepass={{ pzserver_cfg.safehouse.allow_trespass | lower }}
+
+# Allow fire to damage safehouses
+SafehouseAllowFire={{ pzserver_cfg.safehouse.allow_fire | lower }}
+
+# Allow non-members to take items from safehouses
+SafehouseAllowLoot={{ pzserver_cfg.safehouse.allow_loot | lower }}
+
+# Players will respawn in a safehouse that they were a member of before they died
+SafehouseAllowRespawn={{ pzserver_cfg.safehouse.allow_respawn | lower }}
+
+# Players must have survived this number of in-game days before they are allowed to claim a safehouse Min: 0 Max: 2147483647 Default: 0
+SafehouseDaySurvivedToClaim={{ pzserver_cfg.safehouse.days_survived_to_claim }}
+
+# Players are automatically removed from a safehouse they have not visited for this many real-world hours Min: 0 Max: 2147483647 Default: 144
+SafeHouseRemovalTime={{ pzserver_cfg.safehouse.removal_time }}
+
+# Governs whether players can claim non-residential buildings.
+SafehouseAllowNonResidential={{ pzserver_cfg.safehouse.allow_non_residential | lower }}
+
+SafehouseDisableDisguises={{ pzserver_cfg.safehouse.disable_disguises | lower }}
+
+# Min: 0 Max: 2147483647 Default: 20000
+MaxSafezoneSize={{ pzserver_cfg.safehouse.max_safezone_size }}
+
+# Allow players to destroy world objects with sledgehammers
+AllowDestructionBySledgehammer={{ pzserver_cfg.game.allow_destruction_by_sledgehammer | lower }}
+
+# Allow players to destroy world objects only in their safehouse (require AllowDestructionBySledgehammer to true).
+SledgehammerOnlyInSafehouse={{ pzserver_cfg.game.sledgehammer_only_in_safehouse | lower }}
+
+War={{ pzserver_cfg.war.enabled | lower }}
+
+# Time in seconds before the war starts. Min: 60 Max: 2147483647 Default: 600
+WarStartDelay={{ pzserver_cfg.war.start_delay }}
+
+# War duration in seconds. Min: 60 Max: 2147483647 Default: 3600
+WarDuration={{ pzserver_cfg.war.duration }}
+
+# Safehouse hit points limit. Min: 0 Max: 2147483647 Default: 3
+WarSafehouseHitPoints={{ pzserver_cfg.war.safehouse_hit_points }}
+
+# ServerPlayerID determines if a character is from another server, or single player. This value may be changed by soft resets. If this number does match the client, the client must create a new character. This is used in conjunction with ResetID. It is strongly advised that you backup these IDs somewhere
+ServerPlayerID={{ pzserver_cfg.ids.server_player_id }}
+
+# The port for the RCON (Remote Console) Min: 0 Max: 65535 Default: 27015
+RCONPort={{ pzserver_cfg.rcon.port }}
+
+# RCON password (Pick a strong password)
+RCONPassword={{ pzserver_cfg.rcon.password }}
+
+# Enables global text chat integration with a Discord channel
+DiscordEnable={{ pzserver_cfg.discord.enabled | lower }}
+
+# Discord bot access token
+DiscordToken={{ pzserver_cfg.discord.token }}
+
+# The Discord chat channel name
+DiscordChatChannel={{ pzserver_cfg.discord.chat_channel }}
+
+# The Discord logs channel name
+DiscordLogChannel={{ pzserver_cfg.discord.log_channel }}
+
+# The Discord commands channel name
+DiscordCommandChannel={{ pzserver_cfg.discord.command_channel }}
+
+# The Slack incoming webhook URL
+WebhookAddress={{ pzserver_cfg.webhook_address }}
+
+# Clients must know this password to join the server. (Ignored when hosting a server via the Host button)
+Password={{ pzserver_cfg.server.password }}
+
+# Limits the number of different accounts a single Steam user may create on this server. Ignored when using the Hosts button. Min: 0 Max: 2147483647 Default: 0
+MaxAccountsPerUser={{ pzserver_cfg.misc.max_accounts_per_user }}
+
+# Allow co-op/splitscreen players
+AllowCoop={{ pzserver_cfg.game.allow_coop | lower }}
+
+# Players are allowed to sleep when their survivor becomes tired, but they do not NEED to sleep
+SleepAllowed={{ pzserver_cfg.sleep.allowed | lower }}
+
+# Players get tired and need to sleep. (Ignored if SleepAllowed=false)
+SleepNeeded={{ pzserver_cfg.sleep.needed | lower }}
+
+# WIP: Activating this setting may cause visual desynchronization of player positions.
+KnockedDownAllowed={{ pzserver_cfg.game.knocked_down_allowed | lower }}
+
+SneakModeHideFromOtherPlayers={{ pzserver_cfg.game.sneak_mode_hide_from_other_players | lower }}
+
+UltraSpeedDoesnotAffectToAnimals={{ pzserver_cfg.game.ultra_speed_does_not_affect_animals | lower }}
+
+# List Workshop Mod IDs for the server to download. Each must be separated by a semicolon. Example: WorkshopItems=514427485;513111049
+WorkshopItems={{ pzserver_cfg.mods | map(attribute='wid') | join(';') }}
+
+# Show Steam usernames and avatars in the Players list.
+SteamScoreboard={{ pzserver_cfg.steam.scoreboard | lower }}
+
+# Enable the Steam VAC system
+SteamVAC={{ pzserver_cfg.steam.vac | lower }}
+
+# Attempt to configure a UPnP-enabled internet gateway to automatically setup port forwarding rules. The server will fall back to default ports if this fails
+UPnP={{ pzserver_cfg.network.upnp | lower }}
+
+# VOIP is enabled when checked
+VoiceEnable={{ pzserver_cfg.voice.enabled | lower }}
+
+# The minimum tile distance over which VOIP sounds can be heard. Min: 0.00 Max: 100000.00 Default: 10.00
+VoiceMinDistance={{ pzserver_cfg.voice.min_distance }}
+
+# The maximum tile distance over which VOIP sounds can be heard. Min: 0.00 Max: 100000.00 Default: 100.00
+VoiceMaxDistance={{ pzserver_cfg.voice.max_distance }}
+
+# Toggle directional audio for VOIP
+Voice3D={{ pzserver_cfg.voice.voice_3d | lower }}
+
+# Min: 10.00 Max: 150.00 Default: 70.00
+SpeedLimit={{ pzserver_cfg.network.speed_limit }}
+
+LoginQueueEnabled={{ pzserver_cfg.misc.login_queue_enabled | lower }}
+
+# Min: 20 Max: 1200 Default: 60
+LoginQueueConnectTimeout={{ pzserver_cfg.misc.login_queue_connect_timeout }}
+
+# Set the IP from which the server is broadcast. This is for network configurations with multiple IP addresses, such as server farms
+server_browser_announced_ip={{ pzserver_cfg.network.server_browser_announced_ip }}
+
+# Players can respawn in-game at the coordinates where they died
+PlayerRespawnWithSelf={{ pzserver_cfg.player.respawn_with_self | lower }}
+
+# Players can respawn in-game at a split screen / Remote Play player's location
+PlayerRespawnWithOther={{ pzserver_cfg.player.respawn_with_other | lower }}
+
+# Governs how fast time passes while players sleep. Value multiplies the speed of the time that passes during sleeping. Min: 1.00 Max: 100.00 Default: 40.00
+FastForwardMultiplier={{ pzserver_cfg.sleep.fast_forward_multiplier }}
+
+# Safehouse acts like a normal house if an owner of the safehouse is connected (so secure when the owner is offline)
+DisableSafehouseWhenOwnerConnected={{ pzserver_cfg.safehouse.disable_when_owner_connected | lower }}
+
+# Players can create factions when true
+Faction={{ pzserver_cfg.faction.enabled | lower }}
+
+# Players must survive this number of in-game days before being allowed to create a faction Min: 0 Max: 2147483647 Default: 0
+FactionDaySurvivedToCreate={{ pzserver_cfg.faction.days_survived_to_create }}
+
+# Number of players required as faction members before the faction owner can create a group tag Min: 1 Max: 2147483647 Default: 1
+FactionPlayersRequiredForTag={{ pzserver_cfg.faction.players_required_for_tag }}
+
+# Disables radio transmissions from players with an access level
+DisableRadioStaff={{ pzserver_cfg.radio.disable_staff | lower }}
+
+# Disables radio transmissions from players with 'admin' access level
+DisableRadioAdmin={{ pzserver_cfg.radio.disable_admin | lower }}
+
+# Disables radio transmissions from players with 'gm' access level
+DisableRadioGM={{ pzserver_cfg.radio.disable_gm | lower }}
+
+# Disables radio transmissions from players with 'overseer' access level
+DisableRadioOverseer={{ pzserver_cfg.radio.disable_overseer | lower }}
+
+# Disables radio transmissions from players with 'moderator' access level
+DisableRadioModerator={{ pzserver_cfg.radio.disable_moderator | lower }}
+
+# Disables radio transmissions from invisible players
+DisableRadioInvisible={{ pzserver_cfg.radio.disable_invisible | lower }}
+
+# Semicolon-separated list of commands that will not be written to the cmd.txt server log. For example:  -vehicle. Inputting * means do NOT write any vehicle command. Inputting:  +vehicle.installPart means DO write that command
+ClientCommandFilter={{ pzserver_cfg.logging.client_command_filter }}
+
+# Semicolon-separated list of actions that will be written to the ClientActionLogs.txt server log.
+ClientActionLogs={{ pzserver_cfg.logging.client_action_logs }}
+
+# Track changes in player perk levels in PerkLog.txt server log
+PerkLogs={{ pzserver_cfg.logging.perk_logs | lower }}
+
+# Maximum number of items that can be placed in a container.  Zero means there is no limit. (PLEASE NOTE: This includes individual small items such as nails. A limit of 50 will mean only 50 nails can be stored.) Min: 0 Max: 9000 Default: 0
+ItemNumbersLimitPerContainer={{ pzserver_cfg.misc.item_numbers_limit_per_container }}
+
+# Number of days before old blood splats are removed.
+# Removal happens when map chunks are loaded.
+# Zero means they will never disappear Min: 0 Max: 365 Default: 0
+BloodSplatLifespanDays={{ pzserver_cfg.misc.blood_splat_lifespan_days }}
+
+# Allow use of non-ASCII (cyrillic etc) characters in usernames
+AllowNonAsciiUsername={{ pzserver_cfg.misc.allow_non_ascii_username | lower }}
+
+BanKickGlobalSound={{ pzserver_cfg.misc.ban_kick_global_sound | lower }}
+
+# If enabled, when HoursForCorpseRemoval triggers, it will also remove player's corpses from the ground.
+RemovePlayerCorpsesOnCorpseRemoval={{ pzserver_cfg.misc.remove_player_corpses_on_corpse_removal | lower }}
+
+# If true, player can use the "delete all" button on bins.
+TrashDeleteAll={{ pzserver_cfg.game.trash_delete_all | lower }}
+
+# If true, player can hit again when struck by another player.
+PVPMeleeWhileHitReaction={{ pzserver_cfg.pvp.melee_while_hit_reaction | lower }}
+
+# If true, players will have to mouse over someone to see their display name.
+MouseOverToSeeDisplayName={{ pzserver_cfg.player.mouse_over_to_see_display_name | lower }}
+
+# If true, automatically hide the player you can't see (like zombies).
+HidePlayersBehindYou={{ pzserver_cfg.player.hide_players_behind_you | lower }}
+
+# Damage multiplier for PVP melee attacks. Min: 0.00 Max: 500.00 Default: 30.00
+PVPMeleeDamageModifier={{ pzserver_cfg.pvp.melee_damage_modifier }}
+
+# Damage multiplier for PVP ranged attacks. Min: 0.00 Max: 500.00 Default: 50.00
+PVPFirearmDamageModifier={{ pzserver_cfg.pvp.firearm_damage_modifier }}
+
+# Modify the range of zombie attraction to cars. (Lower values can help with lag.) Min: 0.00 Max: 10.00 Default: 0.50
+CarEngineAttractionModifier={{ pzserver_cfg.vehicle.car_engine_attraction_modifier }}
+
+# Governs whether players bump (and knock over) other players when running through them.
+PlayerBumpPlayer={{ pzserver_cfg.pvp.player_bump_player | lower }}
+
+# Controls display of remote players on the in-game map. 1=Hidden 2=Friends 3=Everyone Min: 1 Max: 3 Default: 1
+MapRemotePlayerVisibility={{ pzserver_cfg.player.map_remote_player_visibility }}
+
+# Min: 1 Max: 300 Default: 5
+BackupsCount={{ pzserver_cfg.backup.count }}
+
+BackupsOnStart={{ pzserver_cfg.backup.on_start | lower }}
+
+BackupsOnVersionChange={{ pzserver_cfg.backup.on_version_change | lower }}
+
+# Min: 0 Max: 1500 Default: 0
+BackupsPeriod={{ pzserver_cfg.backup.period }}
+
+# Disables vehicle towing
+DisableVehicleTowing={{ pzserver_cfg.vehicle.disable_vehicle_towing | lower }}
+
+# Disables trailer towing
+DisableTrailerTowing={{ pzserver_cfg.vehicle.disable_trailer_towing | lower }}
+
+# Disables burnt vehicle towing
+DisableBurntTowing={{ pzserver_cfg.vehicle.disable_burnt_towing | lower }}
+
+# Path to the file with the list of words to be prohibited. Each word must be on a separate line
+BadWordListFile={{ pzserver_cfg.bad_word_filter.list_file }}
+
+# Path to the file with the list of words that should be allowed, even if they contain bad word. Each word should be on a separate line.
+GoodWordListFile={{ pzserver_cfg.bad_word_filter.good_word_list_file }}
+
+# What to do with the sender of a bad word in the chat: 1 - ban, 2 - kick, 3 - record the violation in the database, 4 - mute
+BadWordPolicy={{ pzserver_cfg.bad_word_filter.policy }}
+
+# The symbol or piece of text that will replace the bad word
+BadWordReplacement={{ pzserver_cfg.bad_word_filter.replacement }}
+
+# Disables safety system anti-cheat protection.
+AntiCheatSafety={{ pzserver_cfg.anticheat.safety }}
+
+# Disables character speed anti-cheat protection.
+AntiCheatSpeed={{ pzserver_cfg.anticheat.speed }}
+
+# Disables character no-clipping anti-cheat protection.
+AntiCheatNoClip={{ pzserver_cfg.anticheat.noclip }}
+
+# Disables character hit anti-cheat protection.
+AntiCheatHit={{ pzserver_cfg.anticheat.hit }}
+
+# Disables packet exception checks anti-cheat protection.
+AntiCheatPacketException={{ pzserver_cfg.anticheat.packet_exception }}
+
+# Disables player permissions anti-cheat protection.
+AntiCheatPermission={{ pzserver_cfg.anticheat.permission }}
+
+# Disables player XP anti-cheat protection.
+AntiCheatXP={{ pzserver_cfg.anticheat.xp }}
+
+# Disables safehouse anti-cheat protection.
+AntiCheatSafeHouse={{ pzserver_cfg.anticheat.safehouse }}
+
+AntiCheatPlayer={{ pzserver_cfg.anticheat.player }}
+
+# Disables checksum anti-cheat protection.
+AntiCheatChecksum={{ pzserver_cfg.anticheat.checksum }}
+
+# Sets the limit for processing network packets from each client on the server. Min: 100 Max: 1000 Default: 300
+MaxPacketsPerSecond={{ pzserver_cfg.network.max_packets_per_second }}
+
+# Shows player character coordinates in the lower right corner.
+ShowCoordinates={{ pzserver_cfg.misc.show_coordinates | lower }}
+
+# Sets the multiplayer update period in seconds. Statistics is disabled if value is 0. Min: 0 Max: 10 Default: 1
+MultiplayerStatisticsPeriod={{ pzserver_cfg.misc.multiplayer_statistics_period }}
+
+# Disables scoreboard.
+DisableScoreboard={{ pzserver_cfg.misc.disable_scoreboard | lower }}
+
+# Hides admins in the player list.
+HideAdminsInPlayerList={{ pzserver_cfg.misc.hide_admins_in_player_list | lower }}
+
+# The worldgen seed used to generate the world.
+# If you want to change this, put a new value in and delete map_worldgen.bin in your save directory.
+Seed={{ pzserver_cfg.ids.seed }}
+
+UsePhysicsHitReaction={{ pzserver_cfg.misc.use_physics_hit_reaction | lower }}
+
+# Min: 64 Max: 1024 Default: 200
+ChatMessageCharacterLimit={{ pzserver_cfg.misc.chat_message_character_limit }}
+
+# Min: 1 Max: 30 Default: 3
+ChatMessageSlowModeTime={{ pzserver_cfg.misc.chat_message_slow_mode_time }}

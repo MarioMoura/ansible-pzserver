@@ -1,0 +1,93 @@
+---
+# steamcmd is a 32-bit binary, so i386 multiarch is required
+- name: Check enabled foreign architectures
+  ansible.builtin.command:
+    cmd: dpkg --print-foreign-architectures
+  register: pzserver_foreign_arches
+  changed_when: false
+
+- name: Enable i386 multiarch
+  ansible.builtin.command:
+    cmd: dpkg --add-architecture i386
+  when: "'i386' not in pzserver_foreign_arches.stdout"
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      # acl lets become_user hand temp files to the steam user
+      - acl
+      - ca-certificates
+      - curl
+      - zip
+      - lib32gcc-s1
+      - python3
+      - python3-venv
+    state: present
+    update_cache: true
+
+- name: Create server user
+  ansible.builtin.user:
+    name: "{{ pzserver_user }}"
+    home: "{{ pzserver_home }}"
+    shell: /bin/bash
+    create_home: true
+
+- name: Install rcon client into venv
+  become_user: "{{ pzserver_user }}"
+  ansible.builtin.pip:
+    name: rcon
+    virtualenv: "{{ pzserver_rcon_venv }}"
+    virtualenv_command: python3 -m venv
+
+- name: Warn players before update
+  ansible.builtin.import_tasks: rcon.yml
+  when: not pzserver_skip_update and pzserver_restart_warning | int > 0
+
+- name: Check server unit
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}"
+  register: pzserver_unit
+  when: not pzserver_skip_update
+
+- name: Stop server for update
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}"
+    state: stopped
+  when: not pzserver_skip_update and pzserver_unit.status.LoadState | default('not-found') != 'not-found'
+
+- name: Create steamcmd directory
+  ansible.builtin.file:
+    path: "{{ pzserver_steamcmd_dir }}"
+    state: directory
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0755"
+
+- name: Install steamcmd
+  become_user: "{{ pzserver_user }}"
+  ansible.builtin.unarchive:
+    src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+    dest: "{{ pzserver_steamcmd_dir }}"
+    remote_src: true
+    creates: "{{ pzserver_steamcmd_dir }}/steamcmd.sh"
+
+- name: Create server directory
+  ansible.builtin.file:
+    path: "{{ pzserver_install_dir }}"
+    state: directory
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0755"
+
+- name: Install/update Project Zomboid Dedicated Server
+  become_user: "{{ pzserver_user }}"
+  ansible.builtin.command:
+    cmd: >
+      {{ pzserver_steamcmd_dir }}/steamcmd.sh
+      +force_install_dir {{ pzserver_install_dir }}
+      +login anonymous
+      +app_update {{ pzserver_app_id }} validate
+      +quit
+  register: pzserver_steamcmd
+  changed_when: "'already up to date' not in pzserver_steamcmd.stdout"
+  when: not pzserver_skip_update

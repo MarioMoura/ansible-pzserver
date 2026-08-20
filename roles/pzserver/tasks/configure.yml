@@ -1,0 +1,37 @@
+---
+- name: Create profile directory
+  ansible.builtin.file:
+    path: "{{ pzserver_config_dir }}"
+    state: directory
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0755"
+
+- name: Generate server config files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ pzserver_config_dir }}/{{ pzserver_servername }}{{ item.suffix }}"
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0644"
+  loop:
+    - { src: server.ini.j2, suffix: ".ini" }
+    - { src: spawnpoints.lua.j2, suffix: "_spawnpoints.lua" }
+    - { src: spawnregions.lua.j2, suffix: "_spawnregions.lua" }
+  notify: Restart pzserver
+
+- name: Configure JVM settings
+  ansible.builtin.template:
+    src: ProjectZomboid64.json.j2
+    dest: "{{ pzserver_install_dir }}/ProjectZomboid64.json"
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0644"
+  notify: Restart pzserver
+
+- name: Install systemd service
+  ansible.builtin.template:
+    src: pzserver.service.j2
+    dest: "/etc/systemd/system/{{ pzserver_service_name }}.service"
+    mode: "0600"
+  notify: Restart pzserver

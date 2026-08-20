@@ -1,0 +1,13 @@
+---
+# Handlers sharing a listen topic run in definition order: warn, wait, restart
+- name: Warn players before restart
+  ansible.builtin.include_tasks: rcon.yml
+  when: pzserver_skip_update and pzserver_restart_warning | int > 0
+  listen: Restart pzserver
+
+- name: Restart pzserver service
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}"
+    state: restarted
+    daemon_reload: true
+  listen: Restart pzserver

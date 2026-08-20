@@ -1,0 +1,236 @@
+---
+pzserver_user: steam
+pzserver_home: "/home/{{ pzserver_user }}"
+pzserver_steamcmd_dir: "{{ pzserver_home }}/steamcmd"
+pzserver_install_dir: "{{ pzserver_home }}/pzserver"
+pzserver_profile_dir: "{{ pzserver_home }}/profile"
+pzserver_app_id: "380870"
+pzserver_servername: servertest
+pzserver_service_name: pzserver
+pzserver_admin_password: ""
+pzserver_jvm_max_heap: "8g"
+
+# Skip steamcmd update and server stop/start (config-only run)
+pzserver_skip_update: false
+# Seconds to warn players over RCON before a stop/restart; 0 disables
+pzserver_restart_warning: 60
+pzserver_rcon_venv: "{{ pzserver_home }}/.rcon-venv"
+
+pzserver_backup_enabled: true
+pzserver_backup_dir: "{{ pzserver_home }}/backups"
+pzserver_backup_on_calendar: daily
+pzserver_backup_keep_days: 7
+pzserver_backup_db_on_calendar: hourly
+pzserver_backup_db_keep_hours: 48
+
+# Custom spawn points written to <servername>_spawnpoints.lua
+pzserver_spawnpoints: []
+#  - profession: unemployed
+#    worldX: 40
+#    worldY: 22
+#    posX: 67
+#    posY: 201
+# Regions offered to players; custom ones reference the spawnpoints file above
+pzserver_spawnregions:
+  - { name: "Muldraugh, KY", file: "media/maps/Muldraugh, KY/spawnpoints.lua", enabled: true }
+  - { name: "West Point, KY", file: "media/maps/West Point, KY/spawnpoints.lua", enabled: true }
+  - { name: "Riverside, KY", file: "media/maps/Riverside, KY/spawnpoints.lua", enabled: true }
+  - { name: "Rosewood, KY", file: "media/maps/Rosewood, KY/spawnpoints.lua", enabled: true }
+pzserver_custom_spawnregions: []
+#  - { name: "My spawn", serverfile: "servertest_spawnpoints.lua", enabled: true }
+
+# Overrides merged recursively over pzserver_config_defaults
+pzserver_config: {}
+
+pzserver_config_defaults:
+  # Server Identity
+  server:
+    public_name: "Project Zomboid Server"
+    public_description: ""
+    password: ""
+    max_players: 10
+    public: false
+    open: true
+    auto_create_user_in_whitelist: false
+
+  welcome_message: "Welcome to the server!"
+
+  network:
+    default_port: 16261
+    udp_port: 16262
+    ping_limit: 400
+    server_browser_announced_ip: ""
+    upnp: false
+    speed_limit: 70.0
+    max_packets_per_second: 300
+
+  mods: []
+
+  map: "Muldraugh, KY"
+
+  pvp:
+    enabled: true
+    log_to_chat: true
+    log_to_file: true
+    safety_system: true
+    show_safety: true
+    safety_toggle_timer: 100
+    safety_cooldown_timer: 30
+    safety_disconnect_delay: 60
+    melee_while_hit_reaction: false
+    melee_damage_modifier: 30.0
+    firearm_damage_modifier: 50.0
+    player_bump_player: false
+
+  player:
+    display_username: true
+    show_first_and_last_name: false
+    username_disguises: false
+    hide_disguised_username: false
+    spawn_point: "0,0,0"
+    spawn_items: ""
+    respawn_with_self: false
+    respawn_with_other: false
+    mouse_over_to_see_display_name: true
+    hide_players_behind_you: true
+    map_remote_player_visibility: 3
+
+  safehouse:
+    player_safehouse: true
+    admin_safehouse: true
+    allow_trespass: false
+    allow_fire: false
+    allow_loot: false
+    allow_respawn: true
+    days_survived_to_claim: 30
+    removal_time: 144
+    allow_non_residential: false
+    disable_disguises: true
+    max_safezone_size: 20000
+    prevents_loot_respawn: true
+    disable_when_owner_connected: false
+
+  faction:
+    enabled: true
+    days_survived_to_create: 0
+    players_required_for_tag: 1
+
+  sleep:
+    allowed: true
+    needed: false
+    fast_forward_multiplier: 80.0
+
+  game:
+    pause_empty: true
+    global_chat: true
+    chat_streams: "s,r,a,w,y,sh,f,all"
+    no_fire: false
+    announce_death: true
+    announce_animal_death: false
+    save_world_every_minutes: 10
+    allow_destruction_by_sledgehammer: true
+    sledgehammer_only_in_safehouse: false
+    allow_coop: true
+    knocked_down_allowed: false
+    sneak_mode_hide_from_other_players: true
+    ultra_speed_does_not_affect_animals: false
+    trash_delete_all: true
+    drop_off_whitelist_after_death: false
+
+  vehicle:
+    car_engine_attraction_modifier: 0.5
+    disable_vehicle_towing: false
+    disable_trailer_towing: false
+    disable_burnt_towing: false
+
+  war:
+    enabled: false
+    start_delay: 600
+    duration: 3600
+    safehouse_hit_points: 3
+
+  voice:
+    enabled: true
+    min_distance: 10.0
+    max_distance: 100.0
+    voice_3d: true
+
+  anticheat:
+    safety: 4
+    speed: 2
+    noclip: 4
+    hit: 4
+    packet_exception: 4
+    permission: 4
+    xp: 4
+    safehouse: 4
+    player: 4
+    checksum: 4
+    server_customization: 4
+
+  steam:
+    scoreboard: false
+    vac: true
+
+  rcon:
+    port: 27015
+    password: ""
+
+  discord:
+    enabled: false
+    token: ""
+    chat_channel: ""
+    log_channel: ""
+    command_channel: ""
+
+  webhook_address: ""
+
+  backup:
+    count: 5
+    on_start: true
+    on_version_change: true
+    period: 0
+
+  logging:
+    client_command_filter: "-vehicle.*"
+    client_action_logs: "ISEnterVehicle"
+    perk_logs: true
+
+  misc:
+    show_coordinates: false
+    do_lua_checksum: false
+    deny_login_on_overloaded_server: true
+    max_accounts_per_user: 0
+    item_numbers_limit_per_container: 0
+    blood_splat_lifespan_days: 0
+    allow_non_ascii_username: false
+    ban_kick_global_sound: true
+    remove_player_corpses_on_corpse_removal: false
+    switch_zombies_ownership_each_update: false
+    multiplayer_statistics_period: 10
+    disable_scoreboard: false
+    hide_admins_in_player_list: false
+    use_physics_hit_reaction: false
+    chat_message_character_limit: 200
+    chat_message_slow_mode_time: 3
+    login_queue_enabled: false
+    login_queue_connect_timeout: 60
+
+  ids:
+    reset_id: 517305769
+    server_player_id: 0
+    seed: ""
+
+  radio:
+    disable_staff: false
+    disable_admin: true
+    disable_gm: true
+    disable_overseer: false
+    disable_moderator: false
+    disable_invisible: true
+
+  bad_word_filter:
+    list_file: ""
+    good_word_list_file: ""
+    policy: 3
+    replacement: "[HIDDEN]"

@@ -1,0 +1,11 @@
+-- This file was automatically generated when the server was first started.
+-- It defines a custom spawn point that spawns the player in Twiggy's Bar in West Point.
+function SpawnPoints()
+	return {
+{% for point in pzserver_spawnpoints %}
+		{{ point.profession }} = {
+			{ worldX = {{ point.worldX }}, worldY = {{ point.worldY }}, posX = {{ point.posX }}, posY = {{ point.posY }} }
+		}{{ "," if not loop.last else "" }}
+{% endfor %}
+	}
+end

@@ -1,0 +1,4 @@
+---
+pzserver_cfg: "{{ pzserver_config_defaults | combine(pzserver_config, recursive=True) }}"
+pzserver_config_dir: "{{ pzserver_profile_dir }}/Zomboid/Server"
+pzserver_save_dir: "{{ pzserver_profile_dir }}/Zomboid/Saves/Multiplayer/{{ pzserver_servername }}"

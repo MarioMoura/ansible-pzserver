@@ -1,0 +1,31 @@
+# Warn connected players and save the world; skipped when the server is down
+- name: Check server state
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}"
+  register: pzserver_unit
+
+- name: Warn players and save world
+  when: pzserver_unit.status.ActiveState | default('inactive') == 'active'
+  block:
+    - name: Send RCON warning
+      become_user: "{{ pzserver_user }}"
+      ansible.builtin.command:
+        argv:
+          - "{{ pzserver_rcon_venv }}/bin/python"
+          - -c
+          - |
+            import sys
+            from rcon.source import Client
+            with Client("127.0.0.1", int(sys.argv[1]), passwd=sys.argv[2], timeout=5) as c:
+                c.run("servermsg", sys.argv[3])
+                c.run("save")
+          - "{{ pzserver_cfg.rcon.port }}"
+          - "{{ pzserver_cfg.rcon.password }}"
+          - "Server restarting in {{ pzserver_restart_warning }} seconds for maintenance"
+      changed_when: false
+      ignore_errors: true
+      no_log: true
+
+    - name: Wait for players
+      ansible.builtin.pause:
+        seconds: "{{ pzserver_restart_warning }}"

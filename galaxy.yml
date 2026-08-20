@@ -1,0 +1,13 @@
+namespace: mariomoura
+name: pzserver
+version: 0.1.0
+readme: README.md
+authors:
+  - Mario Moura
+description: Project Zomboid dedicated server role (steamcmd install, config, backups, graceful restarts)
+license:
+  - MIT
+repository: https://github.com/MarioMoura/ansible-pzserver
+tags:
+  - zomboid
+  - gameserver

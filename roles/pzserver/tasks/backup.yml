@@ -1,0 +1,24 @@
+---
+- name: Install backup scripts
+  ansible.builtin.template:
+    src: "{{ item }}.sh.j2"
+    dest: "{{ pzserver_home }}/{{ pzserver_service_name }}-{{ item }}.sh"
+    owner: "{{ pzserver_user }}"
+    group: "{{ pzserver_user }}"
+    mode: "0755"
+  loop: [backup, backup-db]
+
+- name: Install backup units
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ pzserver_service_name }}-{{ item }}"
+    mode: "0644"
+  loop: [backup.service, backup.timer, backup-db.service, backup-db.timer]
+
+- name: Enable backup timers
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}-{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  loop: [backup.timer, backup-db.timer]

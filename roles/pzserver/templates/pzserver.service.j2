@@ -1,0 +1,15 @@
+[Unit]
+Description=Project Zomboid Dedicated Server
+After=network.target
+
+[Service]
+Type=simple
+User={{ pzserver_user }}
+Group={{ pzserver_user }}
+WorkingDirectory={{ pzserver_install_dir }}
+ExecStart={{ pzserver_install_dir }}/start-server.sh -servername {{ pzserver_servername }} -adminpassword "{{ pzserver_admin_password }}"
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

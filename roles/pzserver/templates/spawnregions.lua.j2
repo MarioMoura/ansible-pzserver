@@ -1,0 +1,22 @@
+-- This file was automatically generated when the server was first started.
+-- Clients connecting to the server can choose to spawn in one of the following spawn regions.
+-- The administrator can add as many different spawn regions as he/she wants.
+function SpawnRegions()
+	return {
+{% for region in pzserver_spawnregions %}
+{% if region.enabled %}
+		{ name = "{{ region.name }}", file = "{{ region.file }}" },
+{% else %}
+--		{ name = "{{ region.name }}", file = "{{ region.file }}" },
+{% endif %}
+{% endfor %}
+		-- Uncomment the line below to add a custom spawnpoint for this server.
+{% for region in pzserver_custom_spawnregions %}
+{% if region.enabled %}
+		{ name = "{{ region.name }}", serverfile = "{{ region.serverfile }}" },
+{% else %}
+--		{ name = "{{ region.name }}", serverfile = "{{ region.serverfile }}" },
+{% endif %}
+{% endfor %}
+	}
+end

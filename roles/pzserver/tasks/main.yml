@@ -1,0 +1,18 @@
+---
+- name: Install server
+  ansible.builtin.import_tasks: install.yml
+
+- name: Configure server
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Configure backups
+  ansible.builtin.import_tasks: backup.yml
+  when: pzserver_backup_enabled
+
+- name: Enable and start server
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  when: not pzserver_skip_update

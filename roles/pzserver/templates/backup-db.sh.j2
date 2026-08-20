@@ -1,0 +1,10 @@
+#!/bin/bash
+BACKUP_DIR="{{ pzserver_backup_dir }}/db"
+SOURCE_FILE="{{ pzserver_save_dir }}/players.db"
+DATE=$(date +%Y%m%d_%H%M%S)
+KEEP_HOURS={{ pzserver_backup_db_keep_hours }}
+
+mkdir -p "$BACKUP_DIR"
+cp "$SOURCE_FILE" "$BACKUP_DIR/players_$DATE.db"
+
+find "$BACKUP_DIR" -name "players_*.db" -mmin +$((KEEP_HOURS * 60)) -delete

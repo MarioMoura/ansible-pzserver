@@ -1,0 +1,7 @@
+[Unit]
+Description=Backup Project Zomboid world
+
+[Service]
+Type=oneshot
+User={{ pzserver_user }}
+ExecStart={{ pzserver_home }}/{{ pzserver_service_name }}-backup.sh
