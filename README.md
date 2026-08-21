@@ -65,6 +65,7 @@ ansible-playbook site.yml -e pzserver_skip_update=true
 | `pzserver_service_name` | `pzserver` | systemd unit name (backup units are `<name>-backup*`) |
 | `pzserver_admin_password` | `""` | Admin password passed on first start |
 | `pzserver_jvm_max_heap` | `8g` | `-Xmx` |
+| `pzserver_jvm_extra_args` | `[]` | Extra JVM args, e.g. `["-DprometheusPort=9105"]` enables the server's built-in Prometheus endpoint (all interfaces; firewall it) |
 | `pzserver_skip_update` | `false` | Skip steamcmd update and the pre-update stop |
 | `pzserver_restart_warning` | `60` | Seconds of RCON warning before stop/restart; `0` disables |
 | `pzserver_rcon_timeout` | `30` | Socket timeout in seconds for RCON calls |

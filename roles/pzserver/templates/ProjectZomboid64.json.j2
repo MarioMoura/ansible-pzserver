@@ -13,6 +13,8 @@
 		"-Djava.library.path=linux64/:natives/",
 		"-Djava.security.egd=file:/dev/urandom",
 		"-XX:+UseG1GC",
-		"-XX:-OmitStackTraceInFastThrow"
+		"-XX:-OmitStackTraceInFastThrow"{% for arg in pzserver_jvm_extra_args %},
+		"{{ arg }}"{% endfor %}
+
 	]
 }

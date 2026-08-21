@@ -9,6 +9,8 @@ pzserver_servername: servertest
 pzserver_service_name: pzserver
 pzserver_admin_password: ""
 pzserver_jvm_max_heap: "8g"
+# Extra JVM args appended to ProjectZomboid64.json, e.g. ["-DprometheusPort=9105"] for the built-in metrics endpoint
+pzserver_jvm_extra_args: []
 
 # Skip steamcmd update and server stop/start (config-only run)
 pzserver_skip_update: false
