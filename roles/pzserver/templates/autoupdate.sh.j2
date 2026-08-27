@@ -1,0 +1,54 @@
+#!/bin/bash
+# Check Steam for a new server build and apply it only when no players are online
+set -euo pipefail
+
+STEAMCMD="{{ pzserver_steamcmd_dir }}/steamcmd.sh"
+INSTALL_DIR="{{ pzserver_install_dir }}"
+APP_ID="{{ pzserver_app_id }}"
+SERVICE="{{ pzserver_service_name }}"
+RUN_AS=(runuser -u "{{ pzserver_user }}" -- env "HOME={{ pzserver_home }}")
+RCON=("${RUN_AS[@]}" "{{ pzserver_home }}/pzrcon.py" --timeout "{{ pzserver_rcon_timeout }}" 127.0.0.1 "{{ pzserver_cfg.rcon.port }}" '{{ pzserver_cfg.rcon.password }}')
+
+installed=$(awk -F'"' '/"buildid"/{print $4; exit}' "$INSTALL_DIR/steamapps/appmanifest_${APP_ID}.acf")
+
+# steamcmd caches appinfo; drop it so the check sees the current build
+rm -f "{{ pzserver_home }}/Steam/appcache/appinfo.vdf" "{{ pzserver_steamcmd_dir }}/appcache/appinfo.vdf"
+
+latest=$("${RUN_AS[@]}" "$STEAMCMD" +login anonymous +app_info_update 1 +app_info_print "$APP_ID" +quit |
+    awk -F'"' '/"branches"/{b=1} b && /"public"/{p=1} p && /"buildid"/{print $4; exit}')
+
+if [ -z "$installed" ] || [ -z "$latest" ]; then
+    echo "could not determine build ids (installed='$installed' latest='$latest')" >&2
+    exit 1
+fi
+[ "$installed" != "$latest" ] || exit 0
+
+echo "update available: $installed -> $latest"
+
+if systemctl is-active --quiet "$SERVICE"; then
+    players=$("${RCON[@]}" players | awk -F'[()]' '/Players connected/{print $2; exit}')
+    if [ -z "$players" ]; then
+        echo "could not determine player count, deferring update" >&2
+        exit 1
+    fi
+    if [ "$players" -gt 0 ]; then
+        echo "$players player(s) online, deferring update"
+        exit 0
+    fi
+    "${RCON[@]}" save >/dev/null
+    systemctl stop "$SERVICE"
+fi
+
+"${RUN_AS[@]}" "$STEAMCMD" +force_install_dir "$INSTALL_DIR" +login anonymous +app_update "$APP_ID" validate +quit
+systemctl start "$SERVICE"
+echo "updated: $installed -> $latest"
+{% if pzserver_autoupdate_ntfy_url %}
+
+curl -fsS -o /dev/null \
+{% if pzserver_autoupdate_ntfy_token %}
+    -H "Authorization: Bearer {{ pzserver_autoupdate_ntfy_token }}" \
+{% endif %}
+    -H "Title: Project Zomboid server updated" \
+    -d "Build $installed -> $latest applied, server restarted" \
+    "{{ pzserver_autoupdate_ntfy_url }}" || echo "ntfy notification failed" >&2
+{% endif %}

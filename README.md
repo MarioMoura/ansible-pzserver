@@ -7,6 +7,8 @@ Project Zomboid dedicated server on Debian/Ubuntu:
 - `<servername>.ini`, spawn points and spawn regions generated from variables
 - JVM settings and a systemd unit
 - daily world backup and hourly `players.db` backup via systemd timers
+- optional auto-update timer: checks Steam for a new build and applies it only
+  when no players are online, with an optional ntfy notification on success
 - graceful stops: players are warned over RCON and the world is saved before
   any update or config-triggered restart (bundled stdlib-only `pzrcon.py`, also
   handy for ad-hoc commands: `~steam/pzrcon.py 127.0.0.1 27015 <password> players`)
@@ -69,6 +71,10 @@ ansible-playbook site.yml -e pzserver_skip_update=true
 | `pzserver_skip_update` | `false` | Skip steamcmd update and the pre-update stop |
 | `pzserver_restart_warning` | `60` | Seconds of RCON warning before stop/restart; `0` disables |
 | `pzserver_rcon_timeout` | `30` | Socket timeout in seconds for RCON calls |
+| `pzserver_autoupdate_enabled` | `false` | Install the auto-update script and timer |
+| `pzserver_autoupdate_on_calendar` | `hourly` | systemd `OnCalendar` for the update check |
+| `pzserver_autoupdate_ntfy_url` | `""` | ntfy topic URL notified after a successful update (empty disables) |
+| `pzserver_autoupdate_ntfy_token` | `""` | Bearer token for the ntfy request |
 | `pzserver_backup_enabled` | `true` | Install backup scripts and timers |
 | `pzserver_backup_keep_days` / `pzserver_backup_db_keep_hours` | `7` / `48` | Retention |
 | `pzserver_backup_on_calendar` / `pzserver_backup_db_on_calendar` | `daily` / `hourly` | systemd `OnCalendar` |

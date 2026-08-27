@@ -19,6 +19,13 @@ pzserver_restart_warning: 60
 # Socket timeout in seconds for RCON calls
 pzserver_rcon_timeout: 30
 
+# Timer that checks Steam for a new build and applies it only when no players
+# are online; optional ntfy notification after a successful update
+pzserver_autoupdate_enabled: false
+pzserver_autoupdate_on_calendar: hourly
+pzserver_autoupdate_ntfy_url: ""
+pzserver_autoupdate_ntfy_token: ""
+
 pzserver_backup_enabled: true
 pzserver_backup_dir: "{{ pzserver_home }}/backups"
 pzserver_backup_on_calendar: daily

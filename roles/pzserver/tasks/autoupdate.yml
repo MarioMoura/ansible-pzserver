@@ -1,0 +1,21 @@
+---
+# Script runs as root (needs systemctl) and embeds the RCON password
+- name: Install auto-update script
+  ansible.builtin.template:
+    src: autoupdate.sh.j2
+    dest: "{{ pzserver_home }}/{{ pzserver_service_name }}-autoupdate.sh"
+    mode: "0700"
+
+- name: Install auto-update units
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ pzserver_service_name }}-{{ item }}"
+    mode: "0644"
+  loop: [autoupdate.service, autoupdate.timer]
+
+- name: Enable auto-update timer
+  ansible.builtin.systemd:
+    name: "{{ pzserver_service_name }}-autoupdate.timer"
+    enabled: true
+    state: started
+    daemon_reload: true

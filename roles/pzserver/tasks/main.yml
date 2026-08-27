@@ -9,6 +9,10 @@
   ansible.builtin.import_tasks: backup.yml
   when: pzserver_backup_enabled
 
+- name: Configure auto-update
+  ansible.builtin.import_tasks: autoupdate.yml
+  when: pzserver_autoupdate_enabled
+
 - name: Enable and start server
   ansible.builtin.systemd:
     name: "{{ pzserver_service_name }}"

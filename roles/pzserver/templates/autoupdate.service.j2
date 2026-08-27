@@ -1,0 +1,6 @@
+[Unit]
+Description=Auto-update Project Zomboid server
+
+[Service]
+Type=oneshot
+ExecStart={{ pzserver_home }}/{{ pzserver_service_name }}-autoupdate.sh

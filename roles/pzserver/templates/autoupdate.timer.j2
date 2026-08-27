@@ -1,0 +1,9 @@
+[Unit]
+Description=Scheduled Project Zomboid update check
+
+[Timer]
+OnCalendar={{ pzserver_autoupdate_on_calendar }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
